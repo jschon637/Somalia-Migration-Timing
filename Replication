@@ -1,0 +1,535 @@
+setwd("C:/Users/Justin/Dropbox/Indiana/Contentious Politics/Paper")
+
+library(foreign)
+library(zoo)
+Hiraan<- read.zoo("C:/Users/Justin/Dropbox/Indiana/Contentious Politics/Paper/Hiraan Displacement Flows_models.csv",header=TRUE,sep=',',tz='',format="%m/%d/%Y")
+str(Hiraan)
+Juba.Hoose<- read.zoo("C:/Users/Justin/Dropbox/Indiana/Contentious Politics/Paper/Lower Juba Displacement Flows_models.csv",header=TRUE,sep=',',tz='',format="%m/%d/%Y")
+str(Juba.Hoose)
+Banadir<- read.zoo("C:/Users/Justin/Dropbox/Indiana/Contentious Politics/Paper/Banadir Displacement Flows_models.csv",header=TRUE,sep=',',tz='',format="%m/%d/%Y")
+str(Banadir)
+
+#### Example of reading in Stata file
+GTD<- read.dta("C:/Users/Justin/Dropbox/Indiana/Y657 African Politics/Paper/GTD_stata_BEST.dta",convert.dates=TRUE, convert.underscore=TRUE,)
+########
+
+### log displacement
+log.viol<- log(Banadir$Violence)
+log.viol[log.viol<0]<- 0
+
+
+plot(Banadir$Violence, xlab="Time", ylab="Number Displaced", main="Banadir Violence-Related Displacement")
+abline(v=2009-02-02, untf=FALSE, lty=2)
+
+plot(Hiraan$Violence, xlab="Time", ylab="Number Displaced", main="Hiraan Violence-Related Displacement")
+plot(Juba.Hoose$Violence, xlab="Time", ylab="Number Displaced", main="Juba Hoose Violence-Related Displacement")
+
+
+hist(Somalia$Violence)
+plot(density(Hiraan$Violence))
+### This indicates that we have a Poisson distribution (or normal)
+
+plot(Somalia$GED_one_sided, col=2)
+lines(Somalia$GED_events, col=3)
+
+###### Drop if (date_prec 3 and 4) (days_num 14 or higher)
+###### for date_prec=2, fatalities for day 1
+###### for date_prec=0, average fatalities for each day
+###### Write up a paragraph explaining clearly what I have done for cleaning GED
+###### days_num is date_end minus date_start
+###### include counts of how many I am dropping and doing stuff to!!!!!!!!!!!!
+
+library(MCMCpack)
+library(mvtnorm)
+
+N1 <- 2000
+N2 <- 8000
+
+
+### Sample ones
+N1<- 100
+N2<- 500
+
+### Banadir
+
+Banadir.change1<- MCMCregressChange(log.viol.2 ~ 1, data=log.viol, burnin=N1, m=1, b0=0, B0=1, mcmc=N2, verbose=50, marginal.likelihood="Chib95")
+Banadir.change2<- MCMCregressChange(log.viol.2 ~ 1, data=Banadir, burnin=N1, m=2, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change3<- MCMCregressChange(log.viol.2 ~ 1, data=Banadir, burnin=N1, m=3, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change4<- MCMCregressChange(log.viol.2 ~ 1, data=Banadir, burnin=N1, m=4, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change5<- MCMCregressChange(log.viol.2 ~ 1, data=Banadir, burnin=N1, m=5, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change6<- MCMCregressChange(log.viol ~ 1, data=Banadir, burnin=N1, m=6, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change7<- MCMCregressChange(log.viol ~ 1, data=Banadir, burnin=N1, m=7, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change8<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=8, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change9<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=9, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change10<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=10, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change11<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=11, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change12<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=12, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change13<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=13, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change14<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=14, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change15<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=15, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change16<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=16, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Banadir.change17<- MCMCregressChange(Violence ~ 1, data=Banadir, burnin=N1, m=17, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+
+print(BayesFactor(Banadir.change1, Banadir.change2,
+                  Banadir.change3, Banadir.change4,
+                  Banadir.change5))
+
+### 15 changepoints
+
+Juba.Hoose.change1<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=1, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change2<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=2, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change3<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=3, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change4<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=4, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change5<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=5, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change6<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=6, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change7<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=7, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change8<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=8, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change9<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=9, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+Juba.Hoose.change10<- MCMCregressChange(Violence ~ 1, data=Juba.Hoose, burnin=N1, m=10, b0=0, B0=1, mcmc=N2, verbose=5000, marginal.likelihood="Chib95")
+
+print(BayesFactor(Juba.Hoose.change1, Juba.Hoose.change2,
+                  Juba.Hoose.change3, Juba.Hoose.change4,
+                  Juba.Hoose.change5, Juba.Hoose.change6, 
+                  Juba.Hoose.change7))
+### 6 changepoints
+
+
+CIbreak <- function(mcmcout, start= 1, alpha=0.95){
+  out <- attr(mcmcout, "prob.state")
+  y <- attr(mcmcout, "y")
+  m <- attr(mcmcout, "m")
+  ## state n=i+(n-1)
+  for(i in 1:m){
+    pr.st <- c(0, -diff(out[, i+13]))
+    pr.st <- ifelse(pr.st < 0, 0, pr.st)
+    pr.st <- pr.st/sum(pr.st)
+    center <- which(pr.st==max(pr.st))
+    
+    dens <- pr.st[center] 
+    k <-i
+    while (dens <= alpha){
+      dens <- dens + pr.st[center + k] + pr.st[center - k] 
+      k <- k + 1
+    }
+    mk <- k-1
+    ## print(dens)
+    out <- start - 1 + c(center - mk, center,  center + mk)
+    names(out) <- c("lower bound", "center", "upper bound")
+    cat("The HPD band for ", alpha, "is \n")
+    print(out)
+  }
+}
+CIbreak(Banadir.change9)
+
+# Plots
+install.packages("bcp")
+library(bcp)
+install.packages("SLC")
+library(SLC)
+install.packages("sac")
+library(sac)
+library(zoo)
+
+
+plotChange <- function(x, verbose=TRUE, name=NULL, start=0, freq=1)
+{
+  # Setup data for plot
+  m <- attr(x, "m")
+  out <- ts(cbind(attr(x, "y"), attr(x, "prob.state")), start=start, freq=freq)
+  
+  # Compute the location of the changepoints
+  cp.means <- rep(NA, m+1)      # regime means
+  pr.st <- diff(out[,3:(m+2)])  # regime probs
+  pr.st[pr.st<0] <- 0           # zeros
+  cp.store <- rep(NA, m)        # storage for CPs dates
+  cp.idx <- rep(NA, m)
+  
+  for(i in 1:m)
+  {
+    tmp <- cumsum(pr.st[,i])
+    cp.idx[i] <- which(tmp>0.5)[1]-1
+    cp.store[i] <- index(pr.st)[cp.idx[i]]
+  }
+  
+  # Now begin plotting the first two panels: data and the regimes
+  par(mfrow=c(2+m, 1), mai=c(0.4, 0.6, 0.1, 0.05), xpd=TRUE)
+  plot(out[,1], xlab="", ylab=name)
+  plot(out[,2:(m+2)], plot.type="single", col=1:(m+1),
+       xlab="", lwd=2, ylab="Regime Probabilities")
+  
+  # Add the text for the means
+  cp.start <- c(1, cp.idx+1)
+  cp.end <- c(cp.idx, nrow(out))
+  
+  for(i in 1:(m+1))
+  {
+    cp.mn <- mean(out[cp.start[i]:cp.end[i],1])
+    tp <- tsp(as.ts(out))
+    cp.mid <- tp[1] + cp.start[i]/tp[3] + (0.5*(cp.end[i]-cp.start[i])/tp[3])
+    text(x=cp.mid, y=0.5, round(cp.mn, 1), cex=1.5)
+  }
+  
+  # Now plot the densities for the changepoints
+  par(xpd=FALSE)
+  for(i in 1:m)
+  {
+    plot(pr.st[,i], type="h", main="", xlab="",
+         ylab=paste("Pr(Regime ", i+1, ")", sep=""))
+    abline(v = cp.store[i], lty = 3, lwd=2, col = i+1)
+  }
+  
+  if (verbose == TRUE) {
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+    cat("Expected changepoint(s): \n")
+    for (i in 1:(m)) print(cp.store[i])
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+  }
+}
+
+
+# Same as the above plotting function, but it only plots the first two
+# panels.
+plotChange2 <- function(x, verbose=TRUE, name=NULL, start=0, freq=1)
+{
+  # Setup data for plot
+  m <- attr(x, "m")
+  out <- ts(cbind(attr(x, "y"), attr(x, "prob.state")), start=start, freq=freq)
+  
+  # Compute the location of the changepoints
+  cp.means <- rep(NA, m+1)      # regime means
+  pr.st <- diff(out[,3:(m+2)])  # regime probs
+  pr.st[pr.st<0] <- 0           # zeros
+  cp.store <- rep(NA, m)        # storage for CPs dates
+  cp.idx <- rep(NA, m)
+  
+  for(i in 1:m)
+  {
+    tmp <- cumsum(pr.st[,i])
+    cp.idx[i] <- which(tmp>0.5)[1]-1
+    cp.store[i] <- index(pr.st)[cp.idx[i]]
+  }
+  
+  # Now begin plotting the first two panels: data and the regimes
+  par(mfrow=c(2, 1), mai=c(0.5, 0.85, 0.1, 0.1), xpd=TRUE)
+  plot(out[,1], xlab="", ylab=name)
+  plot(out[,2:(m+2)], plot.type="single", col=1:(m+1),
+       xlab="", lwd=2, ylab="Regime Probabilities")
+  
+  # Add the text for the means
+  cp.start <- c(1, cp.idx+1)
+  cp.end <- c(cp.idx, nrow(out))
+  
+  for(i in 1:(m+1))
+  {
+    cp.mn <- mean(out[cp.start[i]:cp.end[i],1])
+    tp <- tsp(as.ts(out))
+    cp.mid <- tp[1] + cp.start[i]/tp[3] + (0.5*(cp.end[i]-cp.start[i])/tp[3])
+    text(x=cp.mid, y=0.5, round(cp.mn, 1), cex=1.25)
+  }
+  
+  if (verbose == TRUE) {
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+    cat("Expected changepoint(s): \n")
+    for (i in 1:(m)) print(cp.store[i])
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+  }
+}
+
+
+# Same as the above plotting function, but it only plots the first two
+# panels.
+plotChange_2 <- function(x, verbose=TRUE, name=NULL, start=0, freq=1)
+{
+  # Setup data for plot
+  m <- attr(x, "m")
+  out <- ts(cbind(attr(x, "y"), attr(x, "prob.state")), start=start, freq=freq)
+  
+  # Compute the location of the changepoints
+  cp.means <- rep(NA, m+1)      # regime means
+  pr.st <- diff(out[,3:(m+2)])  # regime probs
+  pr.st[pr.st<0] <- 0           # zeros
+  cp.store <- rep(NA, m)        # storage for CPs dates
+  cp.idx <- rep(NA, m)
+  
+  for(i in 1:m)
+  {
+    tmp <- cumsum(pr.st[,i])
+    cp.idx[i] <- which(tmp>0.5)[1]-1
+    cp.store[i] <- index(pr.st)[cp.idx[i]]
+  }
+  
+  # Now begin plotting the first two panels: data and the regimes
+  par(mfrow=c(2, 1), mai=c(0.5, 0.85, 0.1, 0.1), xpd=TRUE)
+  plot(out[,1], xlab="", ylab=name)
+  plot(out[,2:(m+2)], plot.type="single", col=1:(m+1),
+       xlab="", lwd=2, ylab="Probabilities")
+  
+  
+  if (verbose == TRUE) {
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+    cat("Expected changepoint(s): \n")
+    for (i in 1:(m)) print(cp.store[i])
+    cat("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n")
+  }
+}
+
+#### Plotting
+plotChange_2(Banadir.change15, name="Displaced", start=c(1))
+title(xlab="Time")
+
+### Expected changepoint(s): 
+### 118 April 27, 2008
+### 228 August 15, 2008
+### 425 February 28, 2009
+### 493 May 7, 2009
+### 573 July 26, 2009
+### 799 March 9, 2010
+### 810 March 20, 2010
+### 1015 October 11, 2010
+### 1343 September 4, 2011
+### 1376 October 7, 2011
+### 1394 October 25, 2011
+### 1609 May 27, 2012
+### 1631 June 18, 2012
+### 1962 May 14, 2013
+### 1963 May 15, 2013
+
+plotChange2(Juba.Hoose.change6, name="Displaced", start=c(1))
+title(xlab="Time")
+
+### Expected changepoint(s): 
+### 260 September 16, 2008
+### 390 January 24, 2009
+### 695 November 25, 2009
+### 1046 November 11, 2010
+### 1719 September 14, 2012
+### 1737 October 2, 2012
+
+
+#######################################################################################
+### Posterior
+######################################################################################
+install.packages("xtable")
+library(xtable)
+#### use this package to make table of Log Bayes Factors
+
+#### Make table for LaTeX (this still needs to be corrected)
+# system("../logBF-V4.tex")
+# tmp.2 <- Somalia.BF$BF.log.mat
+# rownames(tmp.2) <- colnames(tmp.2) <- 1:4
+# print(xtable(tmp.2,
+#              caption="Log Bayes factors for number of changepoints",
+#              label="tab:SomaliaBF"), file="../logBF-V4.tex", append=TRUE)
+
+
+# Now estimate some marginal effects, first differences, etc.
+library(coda)
+
+summary.effects <- function(x)
+{
+  X <- attr(x, "X")
+  m <- attr(x, "m")
+  k <- ncol(x)/(m+1)
+  
+  N <- attr(x, "mcpar")[2]
+  
+  # Percentage changes
+  per.change <- mcmc(as.matrix((exp(x)-1)*100))
+  colnames(per.change) <- paste(rep(colnames(X), m+1), rep(1:(m+1),
+                                                           each=k), sep="_")
+  
+  # First differences -- regime specific, accounting for the
+  # changing data that goes into the computation!
+  
+  # Function gets the prediction for one set of draws, accounting for the
+  # changepoints and their uncertainty.  Uses a bit of apply() foo.
+  # Note also we skip doing the computation for the intercepts.
+  
+  tmp <- sapply(1:N, function(i)
+  {
+    fd.out <- matrix(0, (m+1), (k-1))
+    for(j in 1:(m+1))
+    {
+      # Mean prediction
+      pred <- ((tcrossprod(matrix(X[attr(x,"s.store")[i,]==j,], ncol=k),
+                              matrix(x[i,(((j-1)*k)+1):(((j-1)*k)+k)], nrow=1))))
+      
+      # One unit increases in each variable, one at a time.
+      for (h in 2:k)
+      {
+        X1 <- matrix(X[attr(x, "s.store")[i,]==j,], ncol=k)
+        X1[,h] <- X1[,h]+1
+        
+        pred1 <- ((tcrossprod(X1,
+                                 matrix(x[i,(((j-1)*k)+1):(((j-1)*k)+k)], nrow=1))))
+        
+        fd.out[j,(h-1)] <- mean(pred1-pred) # mean
+        # effect, one regime, one draw
+      }
+    }
+    return(fd.out)
+  })
+  fd <- mcmc(t(tmp))
+  colnames(fd) <- paste(rep(colnames(X)[2:k], m+1), rep(1:(m+1), each=k-1), sep="_")
+  
+  # Now compute marginal effects
+  tmp <- sapply(1:N, function(i)
+  {
+    me.out <- matrix(0, (m+1), (k))
+    for(j in 1:(m+1))
+    {
+      # Mean prediction
+      me.out[j,] <- apply((tcrossprod(matrix(X[attr(x, "s.store")[i,]==j,],ncol=k),
+                                         matrix(x[i,(((j-1)*k)+1):(((j-1)*k)+k)], nrow=1)))%*%
+                            matrix(x[i,(((j-1)*k)+1):(((j-1)*k)+k)],nrow=1),
+                          2, mean)
+    }
+    
+    return(me.out)
+  })
+  me <- mcmc(t(tmp))
+  colnames(me) <- paste(rep(colnames(X), m+1), rep(1:(m+1),
+                                                   each=k), sep="_")
+  
+  out <- list(fd=fd, me=me)
+  attr(out, "m") <- m
+  return(out)
+  
+}
+
+# Sumamrize the first differences with some lattice plots
+
+summary.fd <- function(x, name, ...)
+{
+  n <- attr(x$fd, "mcpar")[2]
+  m <- attr(x, "m")
+  k <- ncol(x$pc)/(m+1)
+  
+  # Cheat this using an MCMC list density plot
+  mc <- vector("list", m+1)
+  mc[[1]] <- x$fd[,1:(k-1)]
+  vname <- sub("_1", "", colnames(mc[[1]]), perl=TRUE)
+  colnames(mc[[1]]) <- vname
+  
+  for(i in 2:(m+1))
+  {
+    
+    mc[[i]] <- x$fd[,(((i-1)*(k-1))+1):(((i-1)*(k-1))+(k-1))]
+    colnames(mc[[i]]) <- vname
+  }
+  
+  class(mc) <- "mcmc.list"
+  print(densityplot(mc, col=1:(m+1), plot.points="",
+                    lwd=2, ...))
+  
+  # Now dump out a table of the same things
+  tmp <- summary(x$fd)
+  # Matrix of the means and 95% CI
+  mean.fd <- matrix(tmp$statistics[,1],k-1)
+  ci.fd <- tmp$quantiles[,c(1,5)]
+  ci.fd <- array(t(ci.fd), c(2, k-1, m+1))
+  
+  # Now may a pretty latex table
+  cat(paste("\\begin{table}[tb]\n \\begin{tabular}{cccc}",
+            "\n", sep=""))
+  for(i in 1:(k-1))
+  {
+    cat(paste(vname[i], "& ", sep = " "))
+    for(j in 1:(m+1))
+    {
+      if(j<m+1)
+      {
+        cat(paste(round(mean.fd[i,j],2), "& ", sep=" "))
+        
+      } else {
+        cat(paste(round(mean.fd[i,j],2), "\\\\", sep=" "))
+        
+      }
+    }
+    cat("\n & ")
+    for(j in 1:(m+1))
+    {
+      if(j<m+1)
+      {
+        cat(paste("[", round(ci.fd[1,i,j],2), ", ",
+                  round(ci.fd[2,i,j],2), "] & ", sep=""))
+      } else {
+        cat(paste("[", round(ci.fd[1,i,j],2), ", ",
+                  round(ci.fd[2,i,j],2), "] \\\\", sep=""))
+      }
+    }
+    cat("\n")
+  }
+  
+  cat("\\end{tabular}\n")
+  cat("\\caption{", name, "}\n \\end{table}\n", sep="")
+  
+}
+
+
+#### Now generate the first differences
+# Somalia.effects <- summary.effects(Somalia.change4)
+
+# pdf(file="../Somalia-first-differences.pdf", width=6.5, height=2.25)
+# summary.fd(Somalia.change4, "Somalia First Differences",
+#           layout=c(5,1), aspect=1, from=-5, to=11, xlim=c(-5,10),
+#           scales=list(cex=0.65, tick.number=4))
+# dev.off()
+
+# Now make the output of the 68% confidence region
+print(Somalia.fd68 <- summary(Somalia.change5, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GED.lag1 <- summary(Somalia.change4.lag1, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GED.lag2 <- summary(Somalia.change5.lag2, quantile=c(0.16, 0.5, 0.84)))
+
+print(Somalia.fd68.ACLED<- summary(Somalia.ACLED.change10, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.ACLED.lag1<- summary(Somalia.ACLED.change10.lag1, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.ACLED.lag2<- summary(Somalia.ACLED.change9.lag2, quantile=c(0.16, 0.5, 0.84)))
+
+print(Somalia.fd68.GTD<- summary(Somalia.change9.GTD, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GTD.lag1<- summary(Somalia.change12.GTD.lag1, quantile=c(0.16, 0.5, 0.84)))
+
+print(Somalia.fd68.GTD.firearms<- summary(Somalia.change13.GTD.firearms, quantile=c(0.16, 0.5, 0.84)))
+
+print(Somalia.fd68.GED.deaths<- summary(Somalia.change7.GED.deaths, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GED.deaths.lag1<- summary(Somalia.change8.GED.deaths.lag1, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GED.deaths.lag2<- summary(Somalia.change8.GED.deaths.lag2, quantile=c(0.16, 0.5, 0.84)))
+print(Somalia.fd68.GED.deaths.lag3<- summary(Somalia.change9.GED.deaths.lag3, quantile=c(0.16, 0.5, 0.84)))
+
+signs <- function(x)
+{
+  x1 <- x$quantiles
+  k <- nrow(x1)
+  names <- rownames(x1)
+  
+  for(i in 1:k)
+  {
+    cat(names[i], " & ")
+    if(x1[i,1] > 0 & x1[i,3]>0) cat("+ & \n")
+    if(x1[i,1] < 0 & x1[i,3]<0) cat("- & \n")
+    if(x1[i,1] < 0 & x1[i,3]>0) cat("0 & \n")
+  }
+}
+
+# GED
+signs(Somalia.fd68)
+signs(Somalia.fd68.GED.lag1)
+signs(Somalia.fd68.GED.lag2)
+
+signs(Somalia.fd68.GED.deaths)
+signs(Somalia.fd68.GED.deaths.lag1)
+signs(Somalia.fd68.GED.deaths.lag2)
+signs(Somalia.fd68.GED.deaths.lag3)
+
+
+
+# ACLED
+signs(Somalia.fd68.ACLED)
+signs(Somalia.fd68.ACLED.lag1)
+signs(Somalia.fd68.ACLED.lag2)
+
+# GTD
+signs(Somalia.fd68.GTD)
+signs(Somalia.fd68.GTD.lag1)
+
+signs(Somalia.fd68.GTD.firearms)
+signs(Somalia.fd68.GTD.firearms.lag1)
